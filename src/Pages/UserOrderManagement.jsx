@@ -8,7 +8,7 @@ const { Option } = Select;
 
 const UserOrderManagement = () => {
   const [productOrders, setProductOrders] = useState([]);
-  const [customOrders, setCustomOrders] = useState([]);
+  const [preBookingOrders, setPreBookingOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('product');
 
@@ -32,13 +32,13 @@ const UserOrderManagement = () => {
         'https://spices-backend.vercel.app/api/productorder'
       );
       
-      // Fetch custom orders
-      const customResponse = await axios.get(
+      // Fetch pre booking orders
+      const preBookingResponse = await axios.get(
         'https://spices-backend.vercel.app/api/orders'
       );
 
       setProductOrders(productResponse.data);
-      setCustomOrders(customResponse.data);
+      setPreBookingOrders(preBookingResponse.data);
       setLoading(false);
     } catch (error) {
       console.error('Fetch error:', error);
@@ -51,11 +51,11 @@ const UserOrderManagement = () => {
   const updateOrderStatus = async (orderId, newStatus, isProductOrder) => {
     try {
       const endpoint = isProductOrder 
-        ? `/api/productorder/${orderId}`
-        : `/api/orders/${orderId}`;
+        ? `https://spices-backend.vercel.app/api/productorder/${orderId}/status`
+        : `https://spices-backend.vercel.app/api/orders/${orderId}/status`;
 
       await axios.put(
-        `https://spices-backend.vercel.app${endpoint}`,
+        endpoint,
         { orderStatus: newStatus }
       );
 
@@ -91,7 +91,7 @@ const UserOrderManagement = () => {
     );
   };
 
-  const renderCustomOrderDetails = (record) => {
+  const renderPreBookingOrderDetails = (record) => {
     return (
       <Descriptions bordered column={1} size="small">
         <Descriptions.Item label="Order ID">{record._id}</Descriptions.Item>
@@ -177,7 +177,7 @@ const UserOrderManagement = () => {
     },
   ];
 
-  const customOrderColumns = [
+  const preBookingOrderColumns = [
     {
       title: 'Product',
       dataIndex: 'productName',
@@ -273,21 +273,21 @@ const UserOrderManagement = () => {
               />
             )}
           </TabPane>
-          <TabPane tab={`Custom Orders (${customOrders.length})`} key="custom">
+          <TabPane tab={`Pre Booking (${preBookingOrders.length})`} key="prebooking">
             {loading ? (
               <div className="loading-spinner">
-                <Spin size="large" tip="Loading custom orders..." />
+                <Spin size="large" tip="Loading pre booking orders..." />
               </div>
             ) : (
               <Table
-                columns={customOrderColumns}
-                dataSource={customOrders}
+                columns={preBookingOrderColumns}
+                dataSource={preBookingOrders}
                 rowKey="_id"
                 pagination={{ pageSize: 10, showSizeChanger: true }}
                 scroll={{ x: 1000 }}
                 bordered
                 expandable={{
-                  expandedRowRender: record => renderCustomOrderDetails(record),
+                  expandedRowRender: record => renderPreBookingOrderDetails(record),
                   rowExpandable: record => true,
                 }}
               />

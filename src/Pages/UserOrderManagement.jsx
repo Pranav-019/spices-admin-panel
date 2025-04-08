@@ -235,17 +235,8 @@ const UserOrderManagement = () => {
   ];
 
   return (
-    <div className="admin-order-management">
-      <div className="admin-header">
-        <h1></h1>
-        <Button 
-          type="primary" 
-          style={{ backgroundColor: '#FF4C24', borderColor: '#FF4C24' }}
-          onClick={fetchAllOrders}
-        >
-          Refresh Orders
-        </Button>
-      </div>
+    <div className="order-management-container">
+      <h1 className="title">Order Management</h1>
       
       <Card className="order-management-card">
         <Tabs
@@ -294,6 +285,17 @@ const UserOrderManagement = () => {
             )}
           </TabPane>
         </Tabs>
+
+        <div className="refresh-button-container">
+          <Button 
+            type="primary" 
+            style={{ backgroundColor: '#FF4C24', borderColor: '#FF4C24' }}
+            onClick={fetchAllOrders}
+            loading={loading}
+          >
+            Refresh Orders
+          </Button>
+        </div>
       </Card>
     </div>
   );
